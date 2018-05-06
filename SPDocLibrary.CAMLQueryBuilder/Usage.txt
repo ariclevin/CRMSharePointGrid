@@ -1,0 +1,32 @@
+﻿/* Code below creates a filter as
+ *   <Eq>
+ *     <FieldRef Name="CREATEDBY_NAME" />
+ *     <Value Type="Text">Noor Mahdi</Value>
+ *   </Eq>
+ *   This filter will get all articles where Author = "Noor Mahdi"
+ */
+CAMLQueryGenericFilter filterByCreatedBy = new CAMLQueryGenericFilter("CREATEDBY_NAME", FieldType.Text, "Aric Levin", QueryType.Equal);
+ 
+/* Code below creates a filter as follows
+ * <IsNull>
+ *   <FieldRef Name="MSA_ID" />
+ * </IsNull>
+ * This filter will get all documents that do not have an MSA_ID
+ */
+CAMLQueryGenericFilter filterMSAIsNull = new CAMLQueryGenericFilter("MSA_ID", true);
+ 
+//Instantiates a builder object with an initial filter
+CAMLQueryBuilder createdByFilterBuilder = new CAMLQueryBuilder(filterByCreatedBy);
+CAMLQueryBuilder msaNullFilterBuilder = new CAMLQueryBuilder(filterMSAIsNull);
+ 
+//Combining filters to form my query
+CAMLQueryBuilder myQuery = new CAMLQueryBuilder(createdByFilterBuilder.getFilter());
+myQuery.ANDFilter(msaNullFilterBuilder.getFilter());
+ 
+//Builds the Ready-to-user query
+myQuery.Build();
+ 
+//Adding an order by element to my query
+myQuery.OrderBy("Created", false);  //Order by descending order of Created Date
+ 
+string query = myQuery.ToString();
